@@ -18,13 +18,16 @@ import { DialogAddApiKeyComponent } from '../dialog-add-apikey/dialog-add-apikey
 })
 export class HomeComponent implements OnInit {
   
-  public initialized$: Observable<boolean> = this.store.select(state => state.app.lang !== null && state.app.portfolio !== null && state.app.alphaApiKey !== undefined);
+  public initialized$: Observable<boolean> = this.store.select(state => state.app.lang !== null && state.app.portfolio !== null && state.app.alphaApiKey !== null);
+  public loading$: Observable<boolean> = this.store.select(state => (state.app.alphaApiKey !== null) &&
+                                                                    (state.app.gapiInitialized === false ||
+                                                                      (state.app.gapiInitialized === true && state.app.portfolio === null && state.app.googleSignedIn === true)));
   public stocks$: Observable<PortfolioStock[]> = this.store.select(state => state.app.portfolio);
   public lang$: Observable<string> = this.store.select(state => state.app.lang);
   
   public signIn$: Observable<boolean> = this.store.select(state => state.app.gapiInitialized === true && state.app.googleSignedIn === false);
   
-  public mustEnterAlphaApiKey$: Observable<boolean> = this.store.select(state => state.app.alphaApiKeyLoaded === false && state.app.alphaApiKey === undefined);
+  public mustEnterAlphaApiKey$: Observable<boolean> = this.store.select(state => state.app.alphaApiKeyLoaded === true && state.app.alphaApiKey === null);
   
   public displayedColumns: string[] = ['symbol', 'inv', 'div', 'history'];
   

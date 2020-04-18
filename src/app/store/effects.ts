@@ -175,8 +175,11 @@ export class StockBookEffects {
             map(key => { 
                 if(key !== undefined) {
                     this.alphaService.setApiKey(key);
+                    return StockBookActions.loadedAlphaApiKeyFromStorage({key: key});
                 }
-                return StockBookActions.loadedAlphaApiKeyFromStorage({key: key}); 
+                else {
+                    return StockBookActions.loadedAlphaApiKeyFromStorage({key: null});
+                }
         })))
     ))
 

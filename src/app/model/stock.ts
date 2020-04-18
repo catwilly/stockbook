@@ -53,7 +53,7 @@ export const emptyAppState: AppState = {
     lang: null,
     gapiInitialized: false,
     googleSignedIn: false,
-    alphaApiKey: undefined,
+    alphaApiKey: null,
     alphaApiKeyLoaded: false
 }
 
