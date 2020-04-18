@@ -3,7 +3,7 @@ import { StockBookEntry, Stock, PortfolioStock, HistoricDay } from '../model/sto
 import { SearchSymbolMatch } from '../model/alphavan';
 
 
-export const loadPortfolioFromStorage = createAction('[Main] Load portfolio from storage');
+export const loadPortfolioFromDrive = createAction('[Main] Load portfolio from storage');
 export const portfolioLoaded = createAction('[Storage] Loaded portoflio success', props<{portfolio: PortfolioStock[]}>());
 export const langLoaded = createAction('[Storage] Loaded lang success', props<{ lang: string }>());
 
@@ -13,8 +13,10 @@ export const saveLang = createAction('[Porfolio Page] Save lang', props<{lang: s
 export const savedLang = createAction('[Storage] Lang saved');
 
 export const loadAlphaApiKeyFromStorage = createAction('[Main] Load Alphavantage API key from storage');
-export const loadedAlphaApiKeyFromStorage = createAction('[Storage] Loaded Alphavantage API key', props<{key: string}>());
+export const loadedAlphaApiKeyFromStorage = createAction('[Storage] Loaded Alphavantage API key from storage', props<{key: string}>());
+
 export const saveAlphaApiKey = createAction('[Main Page] Save Alphavantage API key', props<{key: string}>());
+export const savedAlphaApiKeyToStorage = createAction('[Storage] Saved Alphavantage API key', props<{key: string}>());
 
 export const saveStockInfo = createAction('[Porfolio Page] Save stock info', props<{symbol: string}>());
 export const savedStockInfo = createAction('[Storage] Stock info saved');

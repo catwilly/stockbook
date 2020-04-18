@@ -33,14 +33,14 @@ export class GapiSession {
             }).then(() => {                   
                 this.googleAuth = gapi.auth2.getAuthInstance();
                 let isSignedIn = this.googleAuth.isSignedIn.get();
-                if(isSignedIn) {
+                if(isSignedIn === true) {
                     this.onSingedIn().then(() => {
-                        sub.next(isSignedIn);
+                        sub.next(true);
                         sub.complete();
                     });
                 }
                 else {
-                    sub.next(isSignedIn);
+                    sub.next(false);
                     sub.complete();
                 }                
             });

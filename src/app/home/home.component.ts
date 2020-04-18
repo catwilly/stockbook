@@ -18,25 +18,29 @@ import { DialogAddApiKeyComponent } from '../dialog-add-apikey/dialog-add-apikey
 })
 export class HomeComponent implements OnInit {
   
-  public initialized$: Observable<boolean> = this.store.select(state => state.app.lang !== null && state.app.portfolio !== null && state.app.alphaApiKey !== null);
-  public loading$: Observable<boolean> = this.store.select(state => (state.app.alphaApiKey !== null) &&
-                                                                    (state.app.gapiInitialized === false ||
-                                                                      (state.app.gapiInitialized === true && state.app.portfolio === null && state.app.googleSignedIn === true)));
+  public gapiInitializing$: Observable<boolean> = this.store.select(state => state.app.gapiInitializing);
+  public gapiInitialized$: Observable<boolean> = this.store.select(state => state.app.gapiInitialized);
+
+  public gapiSigningIn$: Observable<boolean> = this.store.select(state => state.app.googleSigningIn);
+  public gapiSignedIn$: Observable<boolean> = this.store.select(state => state.app.googleSignedIn);
+  
+  public gapMustSignIn$: Observable<boolean> = this.store.select(state => state.app.gapiInitialized === true && state.app.googleSignedIn === false);
+
+  public portfolioLoading$: Observable<boolean> = this.store.select(state => state.app.portfolioLoading);
+  public portfolioLoaded$: Observable<boolean> = this.store.select(state => state.app.portfolio !== null);
+  
   public stocks$: Observable<PortfolioStock[]> = this.store.select(state => state.app.portfolio);
   public lang$: Observable<string> = this.store.select(state => state.app.lang);
   
-  public signIn$: Observable<boolean> = this.store.select(state => state.app.gapiInitialized === true && state.app.googleSignedIn === false);
-  
-  public mustEnterAlphaApiKey$: Observable<boolean> = this.store.select(state => state.app.alphaApiKeyLoaded === true && state.app.alphaApiKey === null);
+  public mustEnterAlphaApiKey$: Observable<boolean> = this.store.select(state => state.app.alphaApiKey === "nokey");
+  public alphaApiKeyValid$: Observable<boolean> = this.store.select(state => state.app.alphaApiKey !== null && state.app.alphaApiKey !== "nokey");
   
   public displayedColumns: string[] = ['symbol', 'inv', 'div', 'history'];
   
   constructor(private store: Store<{app: AppState}>, public translate: TranslateService, public dialog: MatDialog, private router: Router) {
-    
-    
   }
   
-  ngOnInit(): void {
+  ngOnInit(): void {    
   }
 
   public onEnterApiKey() {

@@ -42,19 +42,23 @@ export interface PortfolioStock {
 export interface AppState {
     portfolio: PortfolioStock[];
     lang: string;
+    gapiInitializing: boolean,
     gapiInitialized: boolean,
+    googleSigningIn: boolean;
     googleSignedIn: boolean;
+    portfolioLoading: boolean;
     alphaApiKey: string;
-    alphaApiKeyLoaded: boolean;
 }
 
 export const emptyAppState: AppState = {
     portfolio: null,
     lang: null,
+    gapiInitializing: false,
     gapiInitialized: false,
+    googleSigningIn: false,
     googleSignedIn: false,
+    portfolioLoading: false,
     alphaApiKey: null,
-    alphaApiKeyLoaded: false
 }
 
 

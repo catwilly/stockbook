@@ -128,7 +128,7 @@ export class AppModule {
         }]
       }
     });
-
+    
     // dispatch action to load from storage
     this.store.dispatch(StockBookActions.loadLangFromStorage());
     this.store.dispatch(StockBookActions.loadAlphaApiKeyFromStorage());

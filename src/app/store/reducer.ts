@@ -9,13 +9,17 @@ import { getLocaleDateFormat } from '@angular/common';
 const initialState: AppState = emptyAppState;
 
 const reducer = createReducer(initialState, 
+    // Portfolio loading
+    on(StockBookActions.loadPortfolioFromDrive, (state, action) => {        
+        return {...state, portfolioLoading: true};
+    }),    
+    // Portfolio loaded
     on(StockBookActions.portfolioLoaded, (state, action) => {       
-        return {...state, 
-                portfolio: action.portfolio };
+        return {...state, portfolio: action.portfolio, portfolioLoading: false };
         }),
+    // Lang loaded
     on(StockBookActions.langLoaded, (state, action) => {
-        return {...state,
-                lang: action.lang };
+        return {...state, lang: action.lang };
     }),
     on(StockBookActions.addPortfolioStock, (state, action) => {
         return {...state,
@@ -60,14 +64,25 @@ const reducer = createReducer(initialState,
 
         return {...state, portfolio: updatedPortfolio };
     }),
-    on(StockBookActions.gapiSignedIn, (state, action) => {
-        return {...state, googleSignedIn: true };        
-    }),
+    // GAPI Initializing
+    on(StockBookActions.gapiInitialize, (state, action) => {
+        return {...state, gapiInitializing: true };
+    }),    
+    // GAPI Initialized
     on(StockBookActions.gapiInitialized, (state, action) => {
-        return {...state, gapiInitialized: true, googleSignedIn: action.signedIn };
+        return {...state, gapiInitialized: true, gapiInitializing: false, googleSignedIn: action.signedIn };
     }),
+    // GAPI Signing in
+    on(StockBookActions.gapiSignIn, (state, action) => {
+        return {...state, googleSigningIn: true };
+    }),
+    // Google User Signed in
+    on(StockBookActions.gapiSignedIn, (state, action) => {
+        return {...state, googleSignedIn: true, googleSigningIn: false };        
+    }),
+    // AlphaVantage key
     on(StockBookActions.loadedAlphaApiKeyFromStorage, (state, action) => {
-        return {...state, alphaApiKey: action.key, alphaApiKeyLoaded: true};
+        return {...state, alphaApiKey: action.key};
     })
 );
 

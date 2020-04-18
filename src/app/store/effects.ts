@@ -15,8 +15,9 @@ import { GapiSession } from '../services/gapi.session';
 @Injectable()
 export class StockBookEffects {
         
+    // Load Portfolio from Google Drive
     loadStockbook$ = createEffect(() => this.actions$.pipe(
-        ofType(StockBookActions.loadPortfolioFromStorage),
+        ofType(StockBookActions.loadPortfolioFromDrive),
         //mergeMap(() => this.storageService.getStockBook()
         mergeMap(() => from(this.gapiSession.getStockBook())
         .pipe(
@@ -146,13 +147,15 @@ export class StockBookEffects {
             })
         ))));
 
+    // Initialize GAPI
+    // If signed in -> Load Portfolio
     gapiInitialize$ = createEffect(() => this.actions$.pipe(
         ofType(StockBookActions.gapiInitialize),
         mergeMap(action => this.gapiSession.initClient().pipe(
             mergeMap(signedIn => {
                 if(signedIn) {
                     return from([StockBookActions.gapiInitialized({signedIn: signedIn}),
-                                 StockBookActions.loadPortfolioFromStorage() ]);
+                                 StockBookActions.loadPortfolioFromDrive() ]);
                 }
                 else {                                
                     return of(StockBookActions.gapiInitialized({signedIn: signedIn}));
@@ -161,14 +164,17 @@ export class StockBookEffects {
         )))
     );
 
+    // GAPI sign in
+    // When signed in -> Load Portfolio
     gapiSignIn$ = createEffect(() => this.actions$.pipe(
         ofType(StockBookActions.gapiSignIn),
             mergeMap(() => from(this.gapiSession.signIn()).pipe(
                 mergeMap(user => from([StockBookActions.gapiSignedIn(),
-                                       StockBookActions.loadPortfolioFromStorage() ])
+                                       StockBookActions.loadPortfolioFromDrive() ])
         )))
     ));
 
+    // Load AlphaVantage key from storage
     loadAlpha$ = createEffect(() => this.actions$.pipe(
         ofType(StockBookActions.loadAlphaApiKeyFromStorage),
         mergeMap(action => this.storageService.getAlphaVantageKeyApi().pipe(
@@ -178,16 +184,17 @@ export class StockBookEffects {
                     return StockBookActions.loadedAlphaApiKeyFromStorage({key: key});
                 }
                 else {
-                    return StockBookActions.loadedAlphaApiKeyFromStorage({key: null});
+                    return StockBookActions.loadedAlphaApiKeyFromStorage({key: "nokey"});
                 }
         })))
     ))
 
+    // Save AlphaVantage key to storage
     saveAlpha$ = createEffect(() => this.actions$.pipe(
         ofType(StockBookActions.saveAlphaApiKey),
         tap(action => this.alphaService.setApiKey(action.key)),
         mergeMap(action => this.storageService.saveAlphaVantageKeyApi(action.key).pipe(
-            map(() => StockBookActions.loadedAlphaApiKeyFromStorage({key: action.key}))
+            map(() => StockBookActions.savedAlphaApiKeyToStorage({key: action.key}))
         ))
     ))
 

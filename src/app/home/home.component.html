@@ -5,14 +5,37 @@
             <button mat-icon-button style="margin-right: 5pt;" (click)="onSelectLang()">
                 <mat-icon svgIcon="web"></mat-icon>
             </button>        
-        </div>
+        </div>        
         <button mat-icon-button style="margin-right: 5pt;" (click)="onSaveAll()">
             <mat-icon svgIcon="content-save-outline"></mat-icon>
         </button>        
+        <div>v1.0.1</div>
     </mat-toolbar>
     <div fxLayout="column" fxLayoutAlign="start center" style="width: 100%">      
-        <mat-progress-spinner *ngIf="loading$ | async" diameter="40" strokeWidth="4" mode="indeterminate"></mat-progress-spinner>          
-        <table *ngIf="(initialized$ | async)" mat-table [dataSource]="stocks$ | async" class="mat-elevation-z8" style="width: 100%">
+        <div *ngIf="(portfolioLoaded$ | async) === false || (alphaApiKeyValid$ | async) === false" fxLayout="column" fxLayoutAlign="start center" style="width: 100%">
+            <div fxLayout="row" fxLayoutAlign="start center" style="margin-top:10pt;margin-bottom: 10pt;">
+                <div style="margin-right: 5pt;">Initializing Google API...</div>
+                <mat-progress-spinner *ngIf="gapiInitializing$ | async" diameter="20" strokeWidth="3" mode="indeterminate"></mat-progress-spinner>
+                <mat-icon *ngIf="gapiInitialized$ | async" svgIcon="check" color="accent"></mat-icon>
+            </div>
+            <button *ngIf="(gapMustSignIn$ | async) === true" mat-stroked-button color="accent" (click)="onGoogleSignIn()" style="margin-top:10pt;margin-bottom: 10pt;">
+                Sing In with Google
+            </button>
+            <div fxLayout="row" fxLayoutAlign="start center" style="margin-top:10pt;margin-bottom: 10pt;">
+                <div style="margin-right: 5pt;">Google signing in...</div>
+                <mat-progress-spinner *ngIf="gapiSigningIn$ | async" diameter="20" strokeWidth="3" mode="indeterminate"></mat-progress-spinner>
+                <mat-icon *ngIf="gapiSignedIn$ | async" svgIcon="check" color="accent"></mat-icon>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="start center" style="margin-top:10pt;margin-bottom: 10pt;">
+                <div style="margin-right: 5pt;">Loading Portfolio...</div>
+                <mat-progress-spinner *ngIf="portfolioLoading$ | async" diameter="20" strokeWidth="3" mode="indeterminate"></mat-progress-spinner>
+                <mat-icon *ngIf="portfolioLoaded$ | async" svgIcon="check" color="accent"></mat-icon>
+            </div>
+            <button *ngIf="mustEnterAlphaApiKey$ | async" mat-stroked-button color="accent" (click)="onEnterApiKey()" style="margin-top:10pt;margin-bottom: 10pt;">
+                Enter API Key
+            </button>
+        </div>
+        <table *ngIf="(portfolioLoaded$ | async) && (alphaApiKeyValid$ | async)" mat-table [dataSource]="stocks$ | async" class="mat-elevation-z8" style="width: 100%">
             <ng-container matColumnDef="symbol">
                 <th mat-header-cell *matHeaderCellDef>Symbol</th>
                 <td mat-cell *matCellDef="let pstock">{{pstock.stock.symbol}} - {{pstock.stock.name}} </td>
@@ -36,14 +59,8 @@
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>          
-        <button *ngIf="(initialized$ | async)" mat-fab (click)="onAdd()" style="margin-top:20pt">
+        <button *ngIf="(portfolioLoaded$ | async) && (alphaApiKeyValid$ | async)" mat-fab (click)="onAdd()" style="margin-top:20pt">
             <mat-icon svgIcon="plus"></mat-icon>
-        </button>
-        <button *ngIf="signIn$ | async" mat-stroked-button color="accent" (click)="onGoogleSignIn()" style="margin-top:20pt">
-            Sing In with Google
-        </button>
-        <button *ngIf="mustEnterAlphaApiKey$ | async" mat-stroked-button color="accent" (click)="onEnterApiKey()" style="margin-top:20pt">
-            Enter API Key
         </button>
     </div>        
 </div>
