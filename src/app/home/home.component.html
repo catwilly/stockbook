@@ -1,0 +1,54 @@
+<div fxLayout="column" fxLayoutAlign="start center" style="width:100%">
+    <mat-toolbar fxLayout="row" fxLayoutAlign="space-between center" style="width:100%">
+        <div style="margin-left: 10pt">{{'MY_PORTFOLIO' | translate}}</div>
+        <div>
+            <button mat-icon-button style="margin-right: 5pt;" (click)="onSelectLang()">
+                <mat-icon svgIcon="web"></mat-icon>
+            </button>        
+        </div>
+        <button mat-icon-button style="margin-right: 5pt;" (click)="onSaveAll()">
+            <mat-icon svgIcon="content-save-outline"></mat-icon>
+        </button>        
+    </mat-toolbar>
+    <div fxLayout="column" fxLayoutAlign="start center" style="width: 100%">                
+        <table *ngIf="(initialized$ | async); else loading" mat-table [dataSource]="stocks$ | async" class="mat-elevation-z8" style="width: 100%">
+            <ng-container matColumnDef="symbol">
+                <th mat-header-cell *matHeaderCellDef>Symbol</th>
+                <td mat-cell *matCellDef="let pstock">{{pstock.stock.symbol}} - {{pstock.stock.name}} </td>
+            </ng-container>
+            <ng-container matColumnDef="inv">
+                <th mat-header-cell *matHeaderCellDef>Inv</th>
+                <td mat-cell *matCellDef="let pstock"> {{getTotalInvested(pstock).toFixed(2)}} </td>
+            </ng-container>
+            <ng-container matColumnDef="div">
+                <th mat-header-cell *matHeaderCellDef>Div</th>
+                <td mat-cell *matCellDef="let pstock"> {{getTotalDividends(pstock).toFixed(2)}} </td>
+            </ng-container>
+            <ng-container matColumnDef="history">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let pstock"> 
+                    <button mat-icon-button style="margin-right: 5pt;" (click)="onTableClick(pstock)" [disabled]="pstock.dayHistory.length === 0">
+                        <mat-icon [color]="pstock.dayHistory.length === 0 ? 'warn' : 'accent'" svgIcon="chart-line"></mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>          
+        <button *ngIf="(initialized$ | async)" mat-fab (click)="onAdd()" style="margin-top:20pt">
+            <mat-icon svgIcon="plus"></mat-icon>
+        </button>
+        <button *ngIf="signIn$ | async" mat-stroked-button color="accent" (click)="onGoogleSignIn()" style="margin-top:20pt">
+            Sing In with Google
+        </button>
+        <button *ngIf="mustEnterAlphaApiKey$ | async" mat-stroked-button color="accent" (click)="onEnterApiKey()" style="margin-top:20pt">
+            Enter API Key
+        </button>
+    </div>        
+</div>
+<ng-template #loading>
+    <mat-progress-spinner diameter="40" strokeWidth="4" mode="indeterminate"></mat-progress-spinner>
+</ng-template>
+
+
+

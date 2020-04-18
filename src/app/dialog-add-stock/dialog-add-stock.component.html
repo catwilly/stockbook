@@ -1,0 +1,22 @@
+<h1 mat-dialog-title>{{'ADD_NEW_STOCK' | translate}}</h1>
+<div mat-dialog-content style="width: 100%;">
+    <div fxLayout="row" fxLayoutAlign="start start" style="width: 100%;">
+        <div fxFlex>
+            <mat-form-field style="width: 100%;">
+                <input type="text" placeholder="{{'WRITE_STOCK_NAME' | translate}}" matInput [formControl]="myControl" [matAutocomplete]="auto">
+            </mat-form-field>
+            
+            <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let match of (matches$ | async)" [value]="match" style="min-height: 48px; line-height: normal; height: auto; padding: 10px 20px;">
+                    {{getSymbolName(match)}}<br>{{match["4. region"]}} - {{match["8. currency"]}}
+                </mat-option>
+            </mat-autocomplete>
+        </div>
+        <mat-icon *ngIf="licenseError === true" color="warn" svgIcon="cloud-off-outline"></mat-icon>
+        <mat-icon *ngIf="licenseError === false" style="color:green" svgIcon="cloud-check-outline"></mat-icon>
+    </div>
+</div>
+<div mat-dialog-actions style="width:100%;margin-top:10pt" fxLayout="row" fxLayoutAlign="space-between center">
+    <button mat-stroked-button color="warn" (click)="onNoClick()">{{'NO' | translate}}</button>
+    <button mat-raised-button color="primary" (click)="onEnter()" [disabled]="cantEnter()">{{'YES' | translate}}</button>
+</div>

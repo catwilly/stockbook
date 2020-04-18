@@ -1,0 +1,10 @@
+{
+    "MY_PORTFOLIO": "La meva cartera",
+    "ADD_NEW_STOCK": "Afegir nou valor",    
+    "WRITE_STOCK_NAME": "Escriure símbol o nom",
+    "NO": "No",
+    "YES": "Si",
+    "ADD_NEW_ENTRY": "Afegir nova entrada?",
+    "ENTER_APIKEY": "Introdueixi la seva Alphavantage API Key",
+    "ENTER_APIKEY_PH": "Alphavantate API Key"
+}

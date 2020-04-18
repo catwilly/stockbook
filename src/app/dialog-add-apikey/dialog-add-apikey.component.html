@@ -1,0 +1,14 @@
+<h1 mat-dialog-title>{{'ENTER_APIKEY' | translate}}</h1>
+<div mat-dialog-content style="width: 100%;">
+    <div fxLayout="row" fxLayoutAlign="start start" style="width: 100%;">
+        <div fxFlex>
+            <mat-form-field style="width: 100%;">
+                <input type="text" placeholder="{{'ENTER_APIKEY_PH' | translate}}" matInput [(ngModel)]="apiKey">
+            </mat-form-field>
+        </div>
+    </div>
+</div>
+<div mat-dialog-actions style="width:100%;margin-top:10pt" fxLayout="row" fxLayoutAlign="space-between center">
+    <button mat-stroked-button color="warn" (click)="onNoClick()">{{'NO' | translate}}</button>
+    <button mat-raised-button color="primary" (click)="onEnter()" [disabled]="cantEnter()">{{'YES' | translate}}</button>
+</div>

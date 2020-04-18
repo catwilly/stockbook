@@ -1,0 +1,15 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body, .app-frame {    
+    margin: 0;
+    height: 100%;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    box-sizing: border-box;
+    color: #e0e0e0;
+    background-color: #303030;
+}
+
+.language-select {
+    width: 100px;    
+    margin-right: 15px;
+  }

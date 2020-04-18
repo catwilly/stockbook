@@ -1,0 +1,12 @@
+{
+    "MY_PORTFOLIO": "Mi cartera",
+    "ADD_NEW_STOCK": "Añadir nuevo valor",    
+    "WRITE_STOCK_NAME": "Escribir símbolo o nombre",
+    "NO": "No",
+    "YES": "Sí",
+    "ADD_NEW_ENTRY": "¿Añadir nueva entrada?",
+    "VAL_MISSING": "Campo obligatorio",
+    "VAL_NUMBER_POSITIVE": "Debe ser un número positivo",
+    "ENTER_APIKEY": "Introduzca su Alphavantage API Key",
+    "ENTER_APIKEY_PH": "Alphavantate API Key"
+}

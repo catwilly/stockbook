@@ -1,0 +1,12 @@
+{
+    "MY_PORTFOLIO": "My portfolio",
+    "ADD_NEW_STOCK": "Add new symbol",
+    "WRITE_STOCK_NAME": "Write symbol or name",
+    "NO": "No",
+    "YES": "Yeah",
+    "ADD_NEW_ENTRY": "Add new entry?",
+    "VAL_MISSING": "Mandatory field",
+    "VAL_NUMBER_POSITIVE": "Must be a positive number",
+    "ENTER_APIKEY": "Enter you Alphavantage API Key",
+    "ENTER_APIKEY_PH": "Alphavantate API Key"
+}
