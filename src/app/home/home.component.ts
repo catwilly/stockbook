@@ -10,6 +10,9 @@ import { DialogAddStockComponent } from '../dialog-add-stock/dialog-add-stock.co
 import { SearchSymbolMatch, createStockFromMatch } from '../model/alphavan';
 import { Router } from '@angular/router';
 import { DialogAddApiKeyComponent } from '../dialog-add-apikey/dialog-add-apikey.component';
+import { DialogLangselComponent } from '../dialog-langsel/dialog-langsel-component';
+import { filter, map } from 'rxjs/operators';
+import { Utils } from '../model/utils';
 
 @Component({
   selector: 'app-home',
@@ -33,7 +36,9 @@ export class HomeComponent implements OnInit {
   public portfolioLoading$: Observable<boolean> = this.store.pipe(select(state => state.app.portfolioLoading));
   public portfolioLoaded$: Observable<boolean> = this.store.pipe(select(state => state.app.portfolio !== null));
   
-  public stocks$: Observable<PortfolioStock[]> = this.store.pipe(select(state => state.app.portfolio));
+  public stocksEur$: Observable<PortfolioStock[]> = this.store.pipe(select(state => state.app.portfolio), map(x => x.filter(pstock => pstock.stock.currency === "EUR")));
+  public stocksUsd$: Observable<PortfolioStock[]> = this.store.pipe(select(state => state.app.portfolio), map(x => x.filter(pstock => pstock.stock.currency === "USD")));
+
   public lang$: Observable<string> = this.store.pipe(select(state => state.app.lang));
   
   public mustEnterAlphaApiKey$: Observable<boolean> = this.store.pipe(select(state => state.app.alphaApiKey === "nokey"));
@@ -45,6 +50,14 @@ export class HomeComponent implements OnInit {
   }
   
   ngOnInit(): void {    
+  }
+
+  public getCurrencySymbol(row: PortfolioStock):string {
+    switch(row.stock.currency) {
+      case "EUR": return "€";
+      case "USD": return "$";
+      default: return row.stock.currency;
+    }
   }
 
   public onEnterApiKey() {
@@ -60,8 +73,18 @@ export class HomeComponent implements OnInit {
   }
   
   public onSelectLang() {
+    const dialogRef = this.dialog.open(DialogLangselComponent, {      
+      width: '95%'
+    });
     
+    dialogRef.afterClosed().subscribe(lang => {
+      if(lang) {
+        this.store.dispatch(StockBookActions.saveLang({lang: lang}));
+      }
+    });
+
   }
+
   public onTableClick(row: PortfolioStock) {
     this.router.navigate(['/stock', row.stock.symbol]);
   }
@@ -72,15 +95,27 @@ export class HomeComponent implements OnInit {
     return ret;
   }
   
-  public getTotalInvested(pstock: PortfolioStock): number {
-    let ret = pstock.entries.reduce((p,x) => p + (x.entryType === BookEntryType.Buy ? x.numShares * x.sharePrice + x.comission : 0), 0);
-    
+  public getInvested(pstock: PortfolioStock): number {
+    let ret = pstock.entries.reduce((p,x) => p + (x.entryType === BookEntryType.Buy ? x.numShares * x.sharePrice + x.comission : 0), 0);      
+
+    return ret;
+  }
+
+  public getTotalInvested(portfolio: PortfolioStock[]): number {
+    let ret = portfolio.reduce((p,x) => p + this.getInvested(x), 0);
+
     return ret;
   }
   
-  public getTotalDividends(pstock: PortfolioStock): number {
+  public getDividends(pstock: PortfolioStock): number {
     let ret = pstock.entries.reduce((p,x) => p + (x.entryType === BookEntryType.Dividend ? x.total : 0), 0);
     
+    return ret;
+  }
+
+  public getTotalDividends(portfolio: PortfolioStock[]): number {
+    let ret = portfolio.reduce((p,x) => p + this.getDividends(x), 0);
+
     return ret;
   }
   

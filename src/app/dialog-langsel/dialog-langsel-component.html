@@ -1,0 +1,11 @@
+<div fxLayout="column" fxLayoutAlign="start start">
+    <h1><span translate>ASK_CHANGE_LANG</span></h1>
+    <mat-action-list>
+        <button mat-list-item *ngFor="let langDef of langDefs" (click)="onSelected(langDef.lang)">
+            <div fxLayout="row" fxLayoutAlign="start center">
+                <img src="{{langDef.iconSrc}}" style="width: 25pt;margin-right: 5pt;" />                
+                <div style="margin-left: 5pt;">{{langDef.name}}</div>
+            </div>
+        </button>
+    </mat-action-list>    
+</div>

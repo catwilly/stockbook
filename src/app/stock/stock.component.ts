@@ -148,7 +148,8 @@ export class StockComponent implements OnInit {
   public onAddEntry(pstock: PortfolioStock) {
     const dialogRef = this.dialog.open(DialogAddEntryComponent, {      
       width: '95%',
-      height: '90%'
+      height: '90%',
+      data: { currency: pstock.stock.currency }
     });
     
     dialogRef.afterClosed().subscribe((entry: StockBookEntry) => {

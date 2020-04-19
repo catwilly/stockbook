@@ -1,7 +1,10 @@
-import { OnInit, Component } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { OnInit, Component, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { StockBookEntry, BookEntryType } from '../model/stock';
 
+export interface DialogAddEntryData {
+    currency: string;    
+  }
 
 @Component({
     selector: 'app-dialog-add-entry',
@@ -18,9 +21,11 @@ export class DialogAddEntryComponent implements OnInit {
     public comission: number = null;
     public taxes: number = null;
     public total: number = null;
+
+    public currency: string;
     
-    constructor(public dialogRef: MatDialogRef<DialogAddEntryComponent>) {
-        
+    constructor(public dialogRef: MatDialogRef<DialogAddEntryComponent>, @Inject(MAT_DIALOG_DATA) private data: DialogAddEntryData) {
+        this.currency = data.currency;
     }
     
     ngOnInit() { 

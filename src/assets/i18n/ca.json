@@ -6,5 +6,6 @@
     "YES": "Si",
     "ADD_NEW_ENTRY": "Afegir nova entrada?",
     "ENTER_APIKEY": "Introdueixi la seva Alphavantage API Key",
-    "ENTER_APIKEY_PH": "Alphavantate API Key"
+    "ENTER_APIKEY_PH": "Alphavantate API Key",    
+    "ASK_CHANGE_LANG": "Canviar l'idioma?"
 }

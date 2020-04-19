@@ -8,5 +8,6 @@
     "VAL_MISSING": "Mandatory field",
     "VAL_NUMBER_POSITIVE": "Must be a positive number",
     "ENTER_APIKEY": "Enter you Alphavantage API Key",
-    "ENTER_APIKEY_PH": "Alphavantate API Key"
+    "ENTER_APIKEY_PH": "Alphavantate API Key",
+    "ASK_CHANGE_LANG": "Change language?"
 }

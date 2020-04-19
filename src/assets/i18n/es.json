@@ -8,5 +8,6 @@
     "VAL_MISSING": "Campo obligatorio",
     "VAL_NUMBER_POSITIVE": "Debe ser un número positivo",
     "ENTER_APIKEY": "Introduzca su Alphavantage API Key",
-    "ENTER_APIKEY_PH": "Alphavantate API Key"
+    "ENTER_APIKEY_PH": "Alphavantate API Key",
+    "ASK_CHANGE_LANG": "¿Cambiar idioma?"
 }

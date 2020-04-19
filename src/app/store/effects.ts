@@ -116,6 +116,7 @@ export class StockBookEffects {
 
     saveLang$ = createEffect(() => this.actions$.pipe(
         ofType(StockBookActions.saveLang),
+        tap(action => this.translate.use(action.lang)),
         mergeMap(action => this.langService.saveLang(action.lang)
         .pipe(
             map(() => StockBookActions.savedLang()),

@@ -12,25 +12,25 @@
         <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
     <div *ngIf="entryType === 'buy' || entryType === 'sell'" fxLayout="row" fxLayoutAlign="space-around center" style="width: 90%;">
-        <mat-form-field>
-            <mat-label>Number of shares</mat-label>
+        <mat-form-field style="width: 30%;">
+            <mat-label>shares</mat-label>
             <input matInput type="number" [(ngModel)]="numShares">
         </mat-form-field>
-        <mat-form-field>
-            <mat-label>Price per share</mat-label>
-            <input matInput type="number" [(ngModel)]="sharePrice">
+        <mat-form-field style="width: 40%;">
+            <mat-label>Price per share ({{currency}})</mat-label>            
+            <input matInput type="number" [(ngModel)]="sharePrice">            
         </mat-form-field>
     </div>
     <mat-form-field *ngIf="entryType === 'div'">
-        <mat-label>Total dividend</mat-label>
+        <mat-label>Total dividend ({{currency}})</mat-label>
         <input matInput type="number" [(ngModel)]="total">
     </mat-form-field>
     <mat-form-field *ngIf="entryType === 'buy' || entryType === 'sell'">
-        <mat-label>Comission</mat-label>
+        <mat-label>Comission ({{currency}})</mat-label>
         <input matInput type="number" [(ngModel)]="comission">
     </mat-form-field>
     <mat-form-field *ngIf="entryType === 'div'">
-        <mat-label>Taxes</mat-label>
+        <mat-label>Taxes ({{currency}})</mat-label>
         <input matInput type="number" [(ngModel)]="taxes">
     </mat-form-field>
     <div mat-dialog-actions style="width:100%;margin-top:10pt" fxLayout="row" fxLayoutAlign="space-between center">

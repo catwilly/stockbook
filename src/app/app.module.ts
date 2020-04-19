@@ -46,6 +46,8 @@ import * as StockBookActions from './store/actions';
 import { DialogAddEntryComponent } from './dialog-add-entry/dialog-add-entry.component';
 import { GapiSession } from './services/gapi.session';
 import { DialogAddApiKeyComponent } from './dialog-add-apikey/dialog-add-apikey.component';
+import { DialogLangselComponent } from './dialog-langsel/dialog-langsel-component';
+import { Momey2dPipe, Momey3dPipe } from './pipes/money.pipe';
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -59,7 +61,10 @@ export function HttpLoaderFactory(http: HttpClient) {
     StockComponent,
     DialogAddStockComponent,
     DialogAddEntryComponent,
-    DialogAddApiKeyComponent
+    DialogAddApiKeyComponent,
+    DialogLangselComponent,
+    Momey2dPipe,
+    Momey3dPipe
   ],
   imports: [
     BrowserModule,
@@ -104,7 +109,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     StorageModule.forRoot({ IDBNoWrap: true }),
   ],
-  entryComponents: [ DialogAddStockComponent, DialogAddEntryComponent, DialogAddApiKeyComponent ],
+  entryComponents: [ DialogAddStockComponent, DialogAddEntryComponent, DialogAddApiKeyComponent, DialogLangselComponent ],
   providers: [ 
     HttpClient, StorageService, LangService, GapiSession,
   ],
