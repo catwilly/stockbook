@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Store, createSelector, select } from '@ngrx/store';
 import { StockBookEntry, PortfolioStock, AppState, BookEntryType } from '../model/stock';
 import { Observable } from 'rxjs';
 import * as StockBookActions from '../store/actions';
@@ -18,22 +18,26 @@ import { DialogAddApiKeyComponent } from '../dialog-add-apikey/dialog-add-apikey
 })
 export class HomeComponent implements OnInit {
   
-  public gapiInitializing$: Observable<boolean> = this.store.select(state => state.app.gapiInitializing);
-  public gapiInitialized$: Observable<boolean> = this.store.select(state => state.app.gapiInitialized);
+  //private selectGapiInitializing = (state: AppState) => state.gapiInitializing;
+  //private selectGapiInitialized = (state: AppState) => state.gapiInitialized;  
+  //public ga$ = createSelector(this.selectGapiInitializing, x => x);
+  
+  public gapiInitializing$: Observable<boolean> = this.store.pipe(select(x => x.app.gapiInitializing));
+  public gapiInitialized$: Observable<boolean> = this.store.pipe(select(x => x.app.gapiInitialized));
 
-  public gapiSigningIn$: Observable<boolean> = this.store.select(state => state.app.googleSigningIn);
-  public gapiSignedIn$: Observable<boolean> = this.store.select(state => state.app.googleSignedIn);
+  public gapiSigningIn$: Observable<boolean> = this.store.pipe(select(state => state.app.googleSigningIn));
+  public gapiSignedIn$: Observable<boolean> = this.store.pipe(select(state => state.app.googleSignedIn));
   
   public gapMustSignIn$: Observable<boolean> = this.store.select(state => state.app.gapiInitialized === true && state.app.googleSignedIn === false);
 
-  public portfolioLoading$: Observable<boolean> = this.store.select(state => state.app.portfolioLoading);
-  public portfolioLoaded$: Observable<boolean> = this.store.select(state => state.app.portfolio !== null);
+  public portfolioLoading$: Observable<boolean> = this.store.pipe(select(state => state.app.portfolioLoading));
+  public portfolioLoaded$: Observable<boolean> = this.store.pipe(select(state => state.app.portfolio !== null));
   
-  public stocks$: Observable<PortfolioStock[]> = this.store.select(state => state.app.portfolio);
-  public lang$: Observable<string> = this.store.select(state => state.app.lang);
+  public stocks$: Observable<PortfolioStock[]> = this.store.pipe(select(state => state.app.portfolio));
+  public lang$: Observable<string> = this.store.pipe(select(state => state.app.lang));
   
-  public mustEnterAlphaApiKey$: Observable<boolean> = this.store.select(state => state.app.alphaApiKey === "nokey");
-  public alphaApiKeyValid$: Observable<boolean> = this.store.select(state => state.app.alphaApiKey !== null && state.app.alphaApiKey !== "nokey");
+  public mustEnterAlphaApiKey$: Observable<boolean> = this.store.pipe(select(state => state.app.alphaApiKey === "nokey"));
+  public alphaApiKeyValid$: Observable<boolean> = this.store.pipe(select(state => state.app.alphaApiKey !== null && state.app.alphaApiKey !== "nokey"));
   
   public displayedColumns: string[] = ['symbol', 'inv', 'div', 'history'];
   

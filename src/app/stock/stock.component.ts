@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { switchMap, map } from 'rxjs/operators';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { AppState, PortfolioStock, HistoricDay, StockBookEntry, BookEntryType } from '../model/stock';
 import { Observable, EMPTY } from 'rxjs';
 import { ChartDataSets, ChartOptions } from 'chart.js';
@@ -23,7 +23,7 @@ export class StockComponent implements OnInit {
   public stock$: Observable<PortfolioStock> = this.route.paramMap.pipe(
     switchMap((params: ParamMap) => {
       let symbol = params.get('symbol');
-      return this.store.select(state => state.app.portfolio?.find(v => v.stock.symbol === symbol));
+      return this.store.pipe(select(state => state.app.portfolio?.find(v => v.stock.symbol === symbol)));
     }));;
 
   public chartData$: Observable<ChartDataSets[]> = this.stock$.pipe(
