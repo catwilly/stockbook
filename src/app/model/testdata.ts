@@ -2,11 +2,12 @@ import { PortfolioStock } from './stock';
 
 export const testportfolio: PortfolioStock[] = [    
     {
+      "loadingHistory": false,
        "stock":{
           "symbol":"TEF.MDR",
           "name":"Telefonica, S.A.",
           "region":"Madrid",
-          "currency":"EUR"
+          "currency":"EUR",          
        },
        "entries":[
           {

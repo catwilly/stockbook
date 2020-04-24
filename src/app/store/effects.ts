@@ -1,10 +1,10 @@
 
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { of, EMPTY, forkJoin, from } from 'rxjs';
+import { of, EMPTY, forkJoin, from, Subject } from 'rxjs';
 import { map, mergeMap, catchError, exhaustMap, withLatestFrom, tap } from 'rxjs/operators';
 import { StorageService } from '../services/StorageService';
-import { Stock, PortfolioStock, BookEntryType, StockBookEntry, AppState, HistoricDay } from '../model/stock';
+import { Stock, PortfolioStock, BookEntryType, StockBookEntry, AppState, HistoricDay, LoadingStockReport } from '../model/stock';
 import * as StockBookActions from './actions';
 import { LangService } from '../services/LangService';
 import { TranslateService } from '@ngx-translate/core';
@@ -18,22 +18,24 @@ export class StockBookEffects {
     // Load Portfolio from Google Drive
     loadStockbook$ = createEffect(() => this.actions$.pipe(
         ofType(StockBookActions.loadPortfolioFromDrive),
-        //mergeMap(() => this.storageService.getStockBook()
-        mergeMap(() => from(this.gapiSession.getStockBook())
-        .pipe(
-            mergeMap(portfolio => {
-                let loadHistoryActions = portfolio.filter((v,i,o) => v.dayHistory.length === 0)
-                    .map((v,i,o) => StockBookActions.loadStockDayHistory({stockSymbol: v.stock.symbol}));
+        mergeMap(() => {
+            let loadingSub: Subject<LoadingStockReport[]> = new Subject<LoadingStockReport[]>();
+            loadingSub.asObservable().subscribe(n => this.store$.dispatch(StockBookActions.loadingPorfolioReport({report: n})));
+            return from(this.gapiSession.getStockBook(loadingSub))        
+            .pipe(
+                mergeMap(portfolio => {
+                    let loadHistoryActions = portfolio.filter((v,i,o) => v.dayHistory.length === 0)
+                        .map((v,i,o) => StockBookActions.loadStockDayHistory({stockSymbol: v.stock.symbol}));
                 
-                let retActions = [ StockBookActions.portfolioLoaded({ portfolio: portfolio }), ...loadHistoryActions ];
+                    let retActions = [ StockBookActions.portfolioLoaded({ portfolio: portfolio }), ...loadHistoryActions ];
                 
-                return retActions;
-            }), 
-            catchError(err => {
-                console.log(err);
-                return of(StockBookActions.storageFailed(err));
-            }))
-        )
+                    return retActions;
+                }), 
+                catchError(err => {
+                    console.log(err);
+                    return of(StockBookActions.storageFailed(err));
+                }));
+            })
     ));
 
     loadLang$ = createEffect(() => this.actions$.pipe(

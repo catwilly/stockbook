@@ -7,17 +7,23 @@
             <div>{{stock.stock.symbol}}</div>
             <div stle="width:40px"></div>
         </mat-toolbar>
-        <mat-button-toggle-group [value]="stock.dateRange" (change)="onDateRangeChange($event, stock.stock.symbol)" aria-label="Range">
-            <mat-button-toggle value="month1">1M</mat-button-toggle>
-            <mat-button-toggle value="month3">3M</mat-button-toggle>
-            <mat-button-toggle value="month6">6M</mat-button-toggle>
-            <mat-button-toggle value="year1">1Y</mat-button-toggle>
-            <mat-button-toggle value="year2">2Y</mat-button-toggle>
-            <mat-button-toggle value="year3">3Y</mat-button-toggle>
-            <mat-button-toggle value="year4">4Y</mat-button-toggle>
-            <mat-button-toggle value="year5">5Y</mat-button-toggle>
-            <mat-button-toggle value="all">All</mat-button-toggle>
-        </mat-button-toggle-group>
+        <div fxLayout="row" fxLayoutAlign="start center">
+            <mat-button-toggle-group [value]="stock.dateRange" (change)="onDateRangeChange($event, stock.stock.symbol)" aria-label="Range">
+                <mat-button-toggle value="month1">1M</mat-button-toggle>
+                <mat-button-toggle value="month3">3M</mat-button-toggle>
+                <mat-button-toggle value="month6">6M</mat-button-toggle>
+                <mat-button-toggle value="year1">1Y</mat-button-toggle>
+                <mat-button-toggle value="year2">2Y</mat-button-toggle>
+                <mat-button-toggle value="year3">3Y</mat-button-toggle>
+                <mat-button-toggle value="year4">4Y</mat-button-toggle>
+                <mat-button-toggle value="year5">5Y</mat-button-toggle>
+                <mat-button-toggle value="all">All</mat-button-toggle>
+            </mat-button-toggle-group>
+            <button *ngIf="stock.loadingHistory === false" mat-icon-button color="accent" (click)="onSync(stock)" style="margin-left:20pt">
+                <mat-icon svgIcon="sync"></mat-icon>
+            </button>
+            <mat-progress-spinner *ngIf="stock.loadingHistory === true" diameter="20" strokeWidth="3" mode="indeterminate" style="margin-left:20pt"></mat-progress-spinner>
+        </div>
         <canvas baseChart width="95%" height="50%"
         [datasets]="chartData$ | async"
         [labels]="chartLabels$ | async"

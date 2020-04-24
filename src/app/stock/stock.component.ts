@@ -160,6 +160,10 @@ export class StockComponent implements OnInit {
       });
   }
 
+  public onSync(pstock: PortfolioStock) {
+    this.store.dispatch(StockBookActions.loadStockDayHistory({stockSymbol: pstock.stock.symbol}));
+  }
+
   private findIndexRange(history: HistoricDay[], dateRange: string): number {
     let retInx: number;
     if(dateRange === "year1") {

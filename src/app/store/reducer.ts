@@ -29,7 +29,7 @@ const reducer = createReducer(initialState,
     on(StockBookActions.stockDayHistoryLoaded, (state, action) => {
         let updatedPortfolio = state.portfolio.map((v,i,o) => {
             if(v.stock.symbol === action.stockSymbol) {
-                return {...v, dayHistory: action.dayHistory}
+                return {...v, dayHistory: action.dayHistory, loadingHistory: false}
             }
             else {
                 return v;
@@ -83,6 +83,23 @@ const reducer = createReducer(initialState,
     // AlphaVantage key
     on(StockBookActions.loadedAlphaApiKeyFromStorage, (state, action) => {
         return {...state, alphaApiKey: action.key};
+    }),
+    // Loading portfolio stock report
+    on(StockBookActions.loadingPorfolioReport, (state, action) => {
+        return {...state, loadingStockReport: action.report };
+    }),
+    // Request to load stock history
+    on(StockBookActions.loadStockDayHistory, (state, action) => {
+        let updatedPortfolio = state.portfolio.map((v,i,o) => {
+            if(v.stock.symbol === action.stockSymbol) {
+                return {...v, loadingHistory: true }
+            }
+            else {
+                return v;
+            }
+        });
+
+        return {...state, portfolio: updatedPortfolio };
     })
 );
 

@@ -9,7 +9,7 @@
         <!-- <button mat-icon-button style="margin-right: 5pt;" (click)="onSaveAll()">
             <mat-icon svgIcon="content-save-outline"></mat-icon>
         </button>         -->
-        <div>v1.0.3</div>
+        <div>v1.0.4</div>
     </mat-toolbar>
     <div fxLayout="column" fxLayoutAlign="start center" style="width: 100%">      
         <div *ngIf="(portfolioLoaded$ | async) === false || (alphaApiKeyValid$ | async) === false" fxLayout="column" fxLayoutAlign="start center" style="width: 100%">
@@ -34,6 +34,13 @@
             <button *ngIf="mustEnterAlphaApiKey$ | async" mat-stroked-button color="accent" (click)="onEnterApiKey()" style="margin-top:10pt;margin-bottom: 10pt;">
                 Enter API Key
             </button>
+            <div *ngIf="(portfolioLoadReport$ | async) !== null">
+                <div *ngFor="let loadRep of (portfolioLoadReport$ | async)" fxLayout="row" fxLayoutAlign="start center" style="margin-top:10pt;margin-bottom: 10pt;">
+                    <div>Loading {{loadRep.symbol}}... </div>
+                    <mat-progress-spinner *ngIf="loadRep.loading === true" diameter="20" strokeWidth="3" mode="indeterminate"></mat-progress-spinner>
+                    <mat-icon *ngIf="loadRep.loading === false" svgIcon="check" color="accent"></mat-icon>
+                </div>
+            </div>
         </div>
         
         <div *ngIf="(portfolioLoaded$ | async) && (alphaApiKeyValid$ | async)" fxLayout="column" fxLayoutAlign="start center" style="width: 100%">

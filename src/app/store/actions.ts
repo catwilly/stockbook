@@ -1,10 +1,12 @@
 import {createAction, props, union} from '@ngrx/store';
-import { StockBookEntry, Stock, PortfolioStock, HistoricDay } from '../model/stock';
+import { StockBookEntry, Stock, PortfolioStock, HistoricDay, LoadingStockReport } from '../model/stock';
 import { SearchSymbolMatch } from '../model/alphavan';
 
 
 export const loadPortfolioFromDrive = createAction('[Main] Load portfolio from storage');
 export const portfolioLoaded = createAction('[Storage] Loaded portoflio success', props<{portfolio: PortfolioStock[]}>());
+export const loadingPorfolioReport = createAction('[Google Drive] Loading portfolio report', props<{report: LoadingStockReport[]}>());
+
 export const langLoaded = createAction('[Storage] Loaded lang success', props<{ lang: string }>());
 
 export const loadLangFromStorage = createAction('[Main] Load lang from storage');

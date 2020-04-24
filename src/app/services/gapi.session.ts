@@ -1,8 +1,9 @@
 import { Injectable, EventEmitter } from "@angular/core";
-import { Observable, from, ReplaySubject  } from 'rxjs';
+import { Observable, from, ReplaySubject, Subject, forkJoin, concat  } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { PortfolioStock, StockBookEntry, HistoricDay } from '../model/stock';
+import { PortfolioStock, StockBookEntry, HistoricDay, LoadingStockReport } from '../model/stock';
 import { StockInfoData, stockInfoDataFromPortfolioStock } from '../model/database';
+import { map, tap, mergeMap, concatMap, concatAll } from 'rxjs/operators';
 const CLIENT_ID = "1027072148146-frp6p2lq7k82fbl3ikn6u89g9ln6p6d3.apps.googleusercontent.com";
 const API_KEY = "AIzaSyDEvdC_qB__9CsoODtmMHreDWS6TXM51ng";
 const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"];
@@ -71,42 +72,52 @@ export class GapiSession {
         console.log('app folder id = ' + this.appFolderId);
     }
 
-    public async getStockBook (): Promise<PortfolioStock[]> {
+    public getStockBook (loadReportSub: Subject<LoadingStockReport[]>): Observable<PortfolioStock[]> {
         
         let retPortfolio: PortfolioStock[] = [];
+        let loadReport: LoadingStockReport[];
+
+        loadReportSub.next(loadReport);
+        
         // get symbols
-        let stockSymbolList = await this.tryReadFile<string[]>(this.symbolsFileName)
+        return from(this.tryReadFile<string[]>(this.symbolsFileName)).pipe(
+            mergeMap(stockSymbolList => {
+                loadReport = stockSymbolList.map(x => ({ symbol: x, loading: true }));
+                loadReportSub.next(loadReport);
+                let x = stockSymbolList.map((sym, i) => from(this.loadSingleStock(sym)).pipe(tap(x => {
+                    loadReport = loadReport.map((v,i2) => i2 == i ? {...v, loading: false} : v);
+                    loadReportSub.next(loadReport);
+                })));
+                return forkJoin(x);
+            })
+        );
+    }
 
-        if(stockSymbolList.length > 0) {
-            for(let i=0; i<stockSymbolList.length; i++) {
-                let sym = stockSymbolList[i];
-
-                // get stock infos
-                let stockInfo = await this.tryReadFile<StockInfoData>(this.getFileNameStockInfo(sym));
+    private async loadSingleStock(sym: string): Promise<PortfolioStock> {
+        // get stock infos
+        let stockInfo = await this.tryReadFile<StockInfoData>(this.getFileNameStockInfo(sym));
                 
-                // get stock entries
-                let stockEntries = await this.tryReadFile<StockBookEntry[]>(this.getFileNameStockEntries(sym));                
-                stockEntries = this.undefinedOrEmptyArray<StockBookEntry>(stockEntries);
-                stockEntries = stockEntries.map(x => ({ ...x, timeStamp: new Date(x.timeStamp) }));
+        // get stock entries
+        let stockEntries = await this.tryReadFile<StockBookEntry[]>(this.getFileNameStockEntries(sym));
+        stockEntries = this.undefinedOrEmptyArray<StockBookEntry>(stockEntries)
+        stockEntries = stockEntries.map(x => ({ ...x, timeStamp: new Date(x.timeStamp) } as StockBookEntry));
+        
 
-                // get stock dailies
-                let stockDaily = await this.tryReadFile<HistoricDay[]>(this.getFileNameStockHistoricDay(sym));
-                stockDaily = this.undefinedOrEmptyArray<HistoricDay>(stockDaily);
-                stockDaily = stockDaily.map(x => ({ ...x, day: new Date(x.day) }));
+        // get stock dailies
+        let stockDaily = await this.tryReadFile<HistoricDay[]>(this.getFileNameStockHistoricDay(sym));
+        stockDaily = this.undefinedOrEmptyArray<HistoricDay>(stockDaily);
+        stockDaily = stockDaily.map(x => ({ ...x, day: new Date(x.day) } as HistoricDay));
+              
+        // create portfolio stock
+        let pstock: PortfolioStock = {
+            stock:  { symbol: sym, name: stockInfo.name, region: stockInfo.region, currency: stockInfo.currency },
+            entries: stockEntries,
+            dayHistory: stockDaily,
+            dateRange: stockInfo.dateRange,
+            loadingHistory: false
+        };
 
-                // create portfolio stock
-                let pstock: PortfolioStock = {
-                    stock:  { symbol: sym, name: stockInfo.name, region: stockInfo.region, currency: stockInfo.currency },
-                    entries: stockEntries,
-                    dayHistory: stockDaily,
-                    dateRange: stockInfo.dateRange
-                };
-                
-                retPortfolio.push(pstock);
-            }            
-        }
-
-        return retPortfolio;
+        return pstock;
     }
 
     public async saveStockInfo (pstock: PortfolioStock): Promise<unknown> {        

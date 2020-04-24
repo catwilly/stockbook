@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Store, createSelector, select } from '@ngrx/store';
-import { StockBookEntry, PortfolioStock, AppState, BookEntryType } from '../model/stock';
+import { StockBookEntry, PortfolioStock, AppState, BookEntryType, LoadingStockReport } from '../model/stock';
 import { Observable } from 'rxjs';
 import * as StockBookActions from '../store/actions';
 import { forkJoin } from 'rxjs';
@@ -35,6 +35,8 @@ export class HomeComponent implements OnInit {
 
   public portfolioLoading$: Observable<boolean> = this.store.pipe(select(state => state.app.portfolioLoading));
   public portfolioLoaded$: Observable<boolean> = this.store.pipe(select(state => state.app.portfolio !== null));
+
+  public portfolioLoadReport$: Observable<LoadingStockReport[]> = this.store.pipe(select(state => state.app.loadingStockReport));
   
   public stocksEur$: Observable<PortfolioStock[]> = this.store.pipe(select(state => state.app.portfolio), map(x => x.filter(pstock => pstock.stock.currency === "EUR")));
   public stocksUsd$: Observable<PortfolioStock[]> = this.store.pipe(select(state => state.app.portfolio), map(x => x.filter(pstock => pstock.stock.currency === "USD")));
@@ -134,7 +136,8 @@ export class HomeComponent implements OnInit {
           stock: stock, 
           entries: [ ],
           dayHistory: [ ],
-          dateRange: "year1"
+          dateRange: "year1",
+          loadingHistory: true
         };
         
         this.store.dispatch(StockBookActions.addPortfolioStock({stockMatch: portfolioStock}));

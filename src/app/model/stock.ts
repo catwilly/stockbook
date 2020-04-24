@@ -36,6 +36,12 @@ export interface PortfolioStock {
     entries: StockBookEntry[];
     dayHistory: HistoricDay[];
     dateRange: string; 
+    loadingHistory: boolean;
+}
+
+export interface LoadingStockReport {
+    symbol: string;
+    loading: boolean;
 }
 
 // this is the main state
@@ -48,6 +54,7 @@ export interface AppState {
     googleSignedIn: boolean;
     portfolioLoading: boolean;
     alphaApiKey: string;
+    loadingStockReport: LoadingStockReport[];
 }
 
 export const emptyAppState: AppState = {
@@ -59,6 +66,7 @@ export const emptyAppState: AppState = {
     googleSignedIn: false,
     portfolioLoading: false,
     alphaApiKey: null,
+    loadingStockReport: null
 }
 
 
