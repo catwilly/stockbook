@@ -153,7 +153,7 @@ export class GapiSession {
     }
 
     private undefinedOrEmptyArray<T> (x: any) : T[] {
-        return (x === undefined) ? [] : x;
+        return (x === undefined || x == null) ? [] : x;
     }    
     
     private async tryReadFile<T>(filename:string) : Promise<T> {

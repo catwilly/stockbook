@@ -34,5 +34,5 @@ export interface DailySession {
     "2. high": number;
     "3. low": number;
     "4. close": number;
-    "5. volume": number;
+    "6. volume": number;
 }
